@@ -58,8 +58,12 @@ count.groups(shared=current ) # Check the sequence size of the samples (groups)
 sub.sample(shared=current, size=6347 ) # Use the smallest sequence size 
 
 # OTU-based analysis
-rarefaction.single(shared=current, calc=sobs, freq=100, processors=8 )
-summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson, subsample=T )
+#rarefaction.single(shared=current, calc=sobs-chao-ace, freq=100, processors=8 )
+rarefaction.single(shared=current, calc=sobs-chao-ace-simpsoneven-shannoneven-heip-smithwilson, freq=100, processors=8 )
+#summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-simpson-chao-shannon-npshannon-ace-boneh, subsample=T )
+summary.single(shared=current, calc=nseqs-sharednseqs-coverage-sobs-invsimpson-simpson-chao-shannon-npshannon-ace-boneh-qstat-bergerparker-efron-shen-solow-logseries-geometric-bstick, subsample=T )
+summary.single(shared=current, calc=logseries-geometric-bstick, subsample=T )
+summary.shared(calc=sharedsobs-sharedchao-sharedace-jclass-hamming-sorclass-braycurtis-hellinger-thetan )
 
 # Beta diversity measurements
 dist.shared(shared=current, calc=thetayc-jclass, subsample=t, processors=8 )
@@ -80,6 +84,8 @@ hamova(phylip=current, design=organ.location.txt )
 #corr.axes(axes=current, shared=current, method=spearman, numaxes=3)
 #corr.axes(axes=current, metadata=mouse.dpw.metadata, method=spearman, numaxes=3) # This requires that you provide data indicating metadata about each sample. For example, you may know the weight, height, blood pressure, etc. of the subjects in the samples. The file has two columns, col1 is the group (sample) name and col2 the variable with a header as: group variable
 get.communitytype(shared=current )
+make.shared(list=current, group=current )
+get.relabund(shared=current )
 
 # Population-level analysis (Again, you need the metadata with variables to run these lines)
 #metastats(shared=current, design=mouse.time.design, processors=8 ) #groups=F3D0-F3D1-F3D141-F3D142-F3D144-F3D145-F3D146-F3D147-F3D148-F3D149-F3D150-F3D2-F3D3-F3D5-F3D6-F3D7-F3D8-F3D9, 
