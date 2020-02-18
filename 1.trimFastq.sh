@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#-----------------------------------#
+#	Esoh trimmo for Yves	    #
+#-----------------------------------#
+
 alias trimmomatic='java -jar /var/scratch/ytchiechoua/analysis/trimmomatic-0.39.jar'
 
 function usage() {
@@ -90,6 +94,7 @@ if [[ $id == NULL ]]; then
     exit 1;
 else
 echo -e """=========================
+TRIMMOMATI(c) 2020 kevin.esoh@students.jkuat.ac.ke
 Option;		argument
 idlist:		$id
 fqpath:		$dname
@@ -97,42 +102,30 @@ leadx:		$leadx
 trailx:		$trailx
 threads:	$t
 ========================="""
-
 which trimmomatic
-if [[ $? != 0 ]]; then
-   echo "Could not locate trimmomatic"
-   echo "Please install by one of the following means"
-   echo "'sudo apt-get install trimmomatic'"
-   echo "'conda install trimmomatic -c bioconda'"
-   echo "Add bioconda channel if it doesn't already exist: 'conda config --add chennels bioconda'"
-   exit $?
-else
-   #id=$1
-   #dname=$2 # strip trailing forward slash
-   #leadx=$3
-   #trailx=$4
-   #t=$5
-   mkdir -p ${dname}/paired
-   mkdir -p ${dname}/unpaired
-   pdr="${dname}/paired/"
-   udr="${dname}/unpaired/"
-   n="$((50/$t))"
-   while read -r line; do
-       trimmomatic PE -phred33 $line ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 LEADING:$leadx TRAILING:$trailx SLIDINGWINDOW:4:15 MINLEN:36 -threads $t
-   done < $id
-   mv ${dname}/*fp.fq.gz ${dname}/*rp.fq.gz $pdr
-   mv ${dname}/*fu.fq.gz ${dname}/*ru.fq.gz $udr
-fi
-#else
-#        echo """
-#	Usage: ./trimFastq.sh <idlist> <fpath> <leading> <trailing> <threads>
-#	 idlist: File containing SRA run accessions. (NB: Must be in same path as fastq files)
-#	  fpath: Path to fastq files. (NB: Must end with a forward '/' slash)
-#	threads: Optional [default = 1]
-#	leading: Number of bases ot crop from the 5' end
-#       trailing: Number of bases to crop from the 3' end
-#	e.g.: 1_S1_L001_R1_001.fastq.gz 1_S1_L001_R2_001.fastq.gz
-#	
-#    """
-#fi
+
+   if [[ $? != 0 ]]; then
+      echo "Could not locate trimmomatic"
+      echo "Please install by one of the following means"
+      echo "'sudo apt-get install trimmomatic'"
+      echo "'conda install trimmomatic -c bioconda'"
+      echo "Add bioconda channel if it doesn't already exist: 'conda config --add chennels bioconda'"
+      exit $?
+   else
+      #id=$1
+      #dname=$2 # strip trailing forward slash
+      #leadx=$3
+      #trailx=$4
+      #t=$5
+      mkdir -p ${dname}/paired
+      mkdir -p ${dname}/unpaired
+      pdr="${dname}/paired/"
+      udr="${dname}/unpaired/"
+      n="$((50/$t))"
+      while read -r line; do
+          trimmomatic PE -phred33 $line ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 LEADING:$leadx TRAILING:$trailx SLIDINGWINDOW:4:15 MINLEN:36 -threads $t
+      done < $id
+      mv ${dname}/*fp.fq.gz ${dname}/*rp.fq.gz $pdr
+      mv ${dname}/*fu.fq.gz ${dname}/*ru.fq.gz $udr
+   fi
 fi
